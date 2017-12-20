@@ -1,4 +1,4 @@
-import {url, headers, headers2} from '../api/apiConst';
+import {url, headers} from '../api/apiConst';
 export const GET_CATEGORIES = 'GET_CATEGORIES';
 export const GET_POST = 'GET_POST';
 export const GET_ALL_POSTS = 'GET_ALL_POSTS';
@@ -17,7 +17,7 @@ export function getCategoriesSuccess (categories) {
   }
 }
 
-export function getPost ({ postID }) {
+export function getPost ( postID ) {
   return {
     type: GET_POST,
     postID,
@@ -31,26 +31,21 @@ export function getAllPostsSuccess (posts) {
   }
 }
 
-export function addPost ({ id, title, body, category, author, timestamp }) {
+export function addSinglePost (post) {
   return {
     type: ADD_POST,
-    id,
-    title,
-    body,
-    category,
-    author,
-    timestamp,
+    post
   }
 }
 
-export function removePost ({ postID }) {
+export function removePost ( postID ) {
   return {
     type: REMOVE_POST,
     postID,
   }
 }
 
-export function addComment ({ ParentID, comment }) {
+export function addComment ( ParentID, comment ) {
     return {
       type: ADD_COMMENT,
       ParentID,
@@ -58,7 +53,7 @@ export function addComment ({ ParentID, comment }) {
     }
   }
   
-  export function removeComentFromPost ({ commentID }) {
+export function removeComentFromPost ( commentID ) {
     return {
       type: REMOVE_COMMENT_FROM_POST,
       commentID,
@@ -69,7 +64,8 @@ export function fetchCategories() {
     return (dispatch) => {
             fetch(`${url}/categories`, { headers })
             .then((response) => response.json())
-            .then((data) => dispatch(getCategoriesSuccess(data.categories)));
+            .then((data) => dispatch(getCategoriesSuccess(data.categories)))
+            .catch((error)=>{console.log('fetch categories error',error)});            
     };
 }
 
@@ -77,11 +73,12 @@ export function fetchAllPosts() {
   return (dispatch) => {
           fetch(`${url}/posts`, { headers })
           .then((response) => response.json())
-          .then((posts) => { dispatch(getAllPostsSuccess(posts))});
+          .then((posts) => { dispatch(getAllPostsSuccess(posts))})
+          .catch((error)=>{console.log('fetch post error',error)});          
   };
 }
 
-export function putPost(post) {
+export function addPost(post) {
   return (dispatch) => {
       fetch(`${url}/posts`, {
         method: 'POST',
@@ -90,6 +87,26 @@ export function putPost(post) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(post)
-      }).then(res => res.json())
+      }).then(response => response.json())
+      .then((post) => { dispatch(addSinglePost(post))})
+      .catch((error)=>{console.log('add post error',error)});
+    };
+}
+
+export function deletePost(postID) {
+  //return (dispatch) => {
+  //  dispatch(removePost(postID));
+  //}
+  return (dispatch) => {
+          fetch(`${url}/posts/${postID}`, { method: 'DELETE', headers})
+          .then((response) => response.json())
+          .then((postID) =>  dispatch(removePost(postID)))
+          .catch((error)=>{console.log('dispatch error',error)});
   };
+
+  //return (dispatch) => {
+  //        fetch(`${url}/posts/${postID}`, { method: 'DELETE', headers})
+  //        .then((postID) => dispatch(removePost(postID)))
+  //        .catch((error)=>{console.log('dispatch error',error)});
+  //};
 }

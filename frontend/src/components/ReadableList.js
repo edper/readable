@@ -5,6 +5,7 @@ class ReadableList extends Component {
     render() {
         const showPosts  = this.props.posts;
         const categoryId = this.props.categoryId;
+        const removePost = this.props.removePost;
                 
         return(
             <div>
@@ -14,13 +15,13 @@ class ReadableList extends Component {
                         showPosts.length > 0 && 
                             showPosts.map((post)=> (
                                     (!post.deleted) &&
-                                    <PostInfo key={post.id} post={post}/>
+                                    <PostInfo key={post.id} post={post} removePost={removePost}/>
                                 )
                             ) : 
                         showPosts.length > 0 && 
                         showPosts.map((post)=> (
-                                (!post.deleted && post.category==categoryId) &&
-                                <PostInfo key={post.id} post={post}/>
+                                (!post.deleted && post.category===categoryId) &&
+                                <PostInfo key={post.id} post={post} removePost={removePost}/>
                             )
                         ) 
                     

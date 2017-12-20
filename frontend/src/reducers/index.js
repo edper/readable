@@ -2,14 +2,9 @@ import { combineReducers } from 'redux'
 
 import {
   GET_CATEGORIES,
-  GET_POST,
   GET_ALL_POSTS,
   ADD_POST,
   REMOVE_POST,
-  GET_COMMENT,
-  GET_ALL_COMMENTS,
-  ADD_COMMENT,
-  REMOVE_COMMENT_FROM_POST,
 } from '../actions'
 
 function posts (state = {}, action) {
@@ -17,7 +12,11 @@ function posts (state = {}, action) {
       case GET_ALL_POSTS:
         return action.posts;
       case ADD_POST:
-        return action.posts.concat(action.post)
+        return [...state, action.post];
+      case REMOVE_POST:
+        return [
+                  ...state.filter((post)=>post.id!==action.postID)                  
+               ];      
       default:
         return state
     }
