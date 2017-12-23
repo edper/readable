@@ -68,14 +68,14 @@
   height:180px;
   padding-top:15px;
   padding-left:15px;
-  background-color: #e1f5fe;
-  border-left: 6px solid cornflowerblue;
+  background-color:  #e1f5fe;
+  border-left: 5px solid cornflowerblue;
 }
 
 .readable-list-card-bar {
   width:100%;
-  height:50px;
-  padding-top:10px;
+  height:60px;
+  padding-top:5px;
   padding-left:10px;
 }
 
@@ -152,4 +152,14 @@
 
 .material-icons:hover {
   color: #757575;
+}
+
+.edit-font {
+  color: #0aa195;
+}
+
+.comment-box {
+  width:100%;
+  padding: 0px 20px;
+  border-bottom: 1px solid gray;
 }

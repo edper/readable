@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route} from 'react-router-dom';
 import SideBar from './SideBar';
 import Main from './Main';
 import '../App.css';
-import {  fetchCategories, fetchAllPosts, addPost, deletePost
-} from '../actions'
+import {  fetchCategories, fetchAllPosts, addPost, 
+  deletePost, votePost, updatePost, getPost} from '../actions'
 
 class App extends Component {
 
@@ -20,7 +20,7 @@ class App extends Component {
 
   render() {
     
-    const {savePost, removePost} = this.props;
+    const {savePost, removePost, votedPost, updatePost, getPost } = this.props;
 
     return (
       <div className="row">
@@ -28,7 +28,7 @@ class App extends Component {
             <Route path="/" render={()=>(
               <div>
                 <SideBar categories={this.props.categories}/>
-                <Main savePost={savePost} removePost={removePost} posts={this.props.posts}/>
+                <Main posts={this.props.posts} savePost={savePost} removePost={removePost} votedPost={votedPost} updatePost={updatePost} getPost={getPost}/>
               </div>
             )}/>
           </Router>
@@ -37,10 +37,9 @@ class App extends Component {
   }
 }
 
-function mapStateToProps ({posts, comments, categories}) {  
+function mapStateToProps ({posts, categories}) {  
   return {
     posts: posts,
-    comments: comments,
     categories: categories,
   }
 }
@@ -48,9 +47,12 @@ function mapStateToProps ({posts, comments, categories}) {
 function mapDispatchToProps (dispatch) {
   return {
     getAllPosts: () => dispatch(fetchAllPosts()),
+    getPost: (postID) => dispatch(getPost(postID)),
     getCategories: () => dispatch(fetchCategories()),
     savePost: (post) => dispatch(addPost(post)),
-    removePost: (postID) => dispatch(deletePost(postID))
+    updatePost: (post) => dispatch(updatePost(post)),
+    removePost: (postID) => dispatch(deletePost(postID)),
+    votedPost: (vote, postID) => dispatch(votePost(vote, postID)),
   }
 }
   

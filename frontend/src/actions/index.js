@@ -4,8 +4,10 @@ export const GET_POST = 'GET_POST';
 export const GET_ALL_POSTS = 'GET_ALL_POSTS';
 export const ADD_POST = 'ADD_POST';
 export const REMOVE_POST = 'REMOVE_POST';
-export const GET_COMMENT = 'GET_COMMENT';
-export const GET_ALL_COMMENTS = 'GET_ALL_COMMENT';
+export const UPDATE_POST = 'UPDATE_POST';
+export const VOTE_UP = 'VOTE_UP';
+export const VOTE_DOWN = 'VOTE_DOWN';
+export const GET_POST_COMMENTS = 'GET_POST_COMMENTS';
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const REMOVE_COMMENT_FROM_POST = 'REMOVE_COMMENT_FROM_POST';
 
@@ -17,10 +19,10 @@ export function getCategoriesSuccess (categories) {
   }
 }
 
-export function getPost ( postID ) {
+export function getSinglePost ( post ) {
   return {
     type: GET_POST,
-    postID,
+    post,
   }
 }
 
@@ -41,7 +43,35 @@ export function addSinglePost (post) {
 export function removePost ( postID ) {
   return {
     type: REMOVE_POST,
+    postID
+  }
+}
+
+export function savePost ( post ) {
+  return {
+    type: UPDATE_POST,
+    post
+  }
+}
+
+export function voteUp ( postID ) {
+  return {
+    type: VOTE_UP,
     postID,
+  }
+}
+
+export function voteDown ( postID ) {
+  return {
+    type: VOTE_DOWN,
+    postID,
+  }
+}
+
+export function getPostComments (comments) {
+  return {
+    type: GET_POST_COMMENTS,
+    comments
   }
 }
 
@@ -69,6 +99,15 @@ export function fetchCategories() {
     };
 }
 
+export function getPost(postID) {
+  return (dispatch) => {
+      fetch(`${url}/posts/${postID}`, { method: 'GET', headers})
+      .then((response) => response.json())
+      .then((post) => {dispatch(getSinglePost(post))})
+      .catch((error)=>{console.log('fetch sigle post error',error)});          
+};
+}
+
 export function fetchAllPosts() {
   return (dispatch) => {
           fetch(`${url}/posts`, { headers })
@@ -94,19 +133,51 @@ export function addPost(post) {
 }
 
 export function deletePost(postID) {
-  //return (dispatch) => {
-  //  dispatch(removePost(postID));
-  //}
   return (dispatch) => {
           fetch(`${url}/posts/${postID}`, { method: 'DELETE', headers})
           .then((response) => response.json())
-          .then((postID) =>  dispatch(removePost(postID)))
+          .then(() =>  dispatch(removePost(postID)))
           .catch((error)=>{console.log('dispatch error',error)});
   };
-
-  //return (dispatch) => {
-  //        fetch(`${url}/posts/${postID}`, { method: 'DELETE', headers})
-  //        .then((postID) => dispatch(removePost(postID)))
-  //        .catch((error)=>{console.log('dispatch error',error)});
-  //};
 }
+
+export function votePost(vote, postID) {
+  return (dispatch) => {
+      fetch(`${url}/posts/${postID}`, {
+        method: 'POST',
+        headers : {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({option:vote})
+      }).then(response => response.json())
+      .then((post) => { vote==="upVote" ? dispatch(voteUp(postID)) : dispatch(voteDown(postID)) })
+      .catch((error)=>{console.log('post voting error',error)});
+    };
+}
+
+export function updatePost(post) {
+  return (dispatch) => {
+      fetch(`${url}/posts/${post.id}`, {
+        method: 'PUT',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post)
+      }).then(response => response.json())
+      .then(() => { dispatch(savePost(post))})
+      .catch((error)=>{console.log('update post error',error)});
+    };
+}
+
+
+export function fetchPostComments(postID) {
+  return (dispatch) => {
+        fetch(`${url}/posts/${postID}/comments`, { method: 'GET', headers})
+        .then((response) => response.json())
+        .then((comments) => { dispatch(getPostComments(comments))})
+        .catch((error)=>{console.log('fetch comments error',error)});          
+  };
+}
+
