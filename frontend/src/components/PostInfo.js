@@ -1,17 +1,10 @@
 import React, {Component} from 'react';
-  
-class PostInfo extends Component {
 
-    constructor(props) {
-        super(props);
-        this.handleDeletePost = this.handleDeletePost.bind(this);
-        this.handleVotePost = this.handleVotePost.bind(this);
-        this.handlePassPost = this.handlePassPost.bind(this);
-        this.handleViewPost = this.handleViewPost.bind(this);
-    }
+class PostInfo extends Component {
 
     handleDeletePost = (e) => {
         e.preventDefault();
+        this.props.setEditFlag(false);
         this.props.removePost(this.postid.value);
     }
 
@@ -25,26 +18,33 @@ class PostInfo extends Component {
         this.props.passPost(this.props.post);
     }
 
-    handleViewPost = (e) => {
-        this.props.getViewPost(this.postid.value);
+    handleFetchComments = () => {
+        this.props.getAllComments(this.postid.value);
     }
-
+    
     componentDidMount() {
         this.setState({currentPost:this.props.post})
     }
+
+    // Prepare comments when user ready to view comments on the Post
+    componentWillUnmount() {
+        this.handleFetchComments();
+     }
+
 
     render() {
 
         const post = this.props.post;
         const postDate = new Date(post.timestamp).toDateString();
-        const url = `/messages/${post.id}`;
+        const url = `/comments/${post.id}`;
+
         return (
             <div className="row">
                 <div className="row readable-list-card z-depth-4">
                     <div className="float-date">{postDate}</div><br/>
                     {/* Title here */}
                     <div className="row">
-                        <a href={url} onClick={this.handleViewPost}>
+                        <a href={url} onClick={this.handleFetchComments}>
                             <div name="title" ref="myTitle" className="card-title truncate"><strong>Title : </strong>{post.title}</div>
                         </a>
                     </div>

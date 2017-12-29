@@ -5,13 +5,10 @@ import SideBar from './SideBar';
 import Main from './Main';
 import '../App.css';
 import {  fetchCategories, fetchAllPosts, addPost, 
-  deletePost, votePost, updatePost, getPost} from '../actions'
+  deletePost, votePost, updatePost, fetchPost, fetchPostComments, 
+  voteComments, addComment, deleteComment, updateComment} from '../actions'
 
 class App extends Component {
-
-  state = {
-    posts: []
-  }
 
   componentDidMount(){
     this.props.getCategories();
@@ -20,15 +17,22 @@ class App extends Component {
 
   render() {
     
-    const {savePost, removePost, votedPost, updatePost, getPost } = this.props;
+    // Props for passing to child components
+    const {savePost, removePost, votedPost, updatePost, fetchPost, 
+          getAllComments, votedComments, comments, saveComment, removeComment, updateComment } = this.props;
 
     return (
       <div className="row">
           <Router>
             <Route path="/" render={()=>(
               <div>
+                {/* Sidebar Menu Component */}
                 <SideBar categories={this.props.categories}/>
-                <Main posts={this.props.posts} savePost={savePost} removePost={removePost} votedPost={votedPost} updatePost={updatePost} getPost={getPost}/>
+                {/* Main content Component on the right of Sidebar menu */}
+                <Main posts={this.props.posts} savePost={savePost} removePost={removePost} 
+                    votedPost={votedPost} updatePost={updatePost} fetchPost={fetchPost} 
+                    getAllComments={getAllComments} votedComments = {votedComments} comments={comments} 
+                    saveComment={saveComment} removeComment={removeComment} updateComment={updateComment}/>
               </div>
             )}/>
           </Router>
@@ -37,17 +41,25 @@ class App extends Component {
   }
 }
 
-function mapStateToProps ({posts, categories}) {  
+// Mapping posts, comments and categories states to props 
+function mapStateToProps ({posts, comments, categories}) {  
   return {
     posts: posts,
+    comments: comments,
     categories: categories,
   }
 }
-  
+
+// Mapping action dispatchers from actions to props
 function mapDispatchToProps (dispatch) {
   return {
     getAllPosts: () => dispatch(fetchAllPosts()),
-    getPost: (postID) => dispatch(getPost(postID)),
+    fetchPost: (postID) => dispatch(fetchPost(postID)),
+    getAllComments: (postID) => dispatch(fetchPostComments(postID)),
+    votedComments: (vote, commentsID) => dispatch(voteComments(vote, commentsID)),
+    saveComment: (comment) => dispatch(addComment(comment)),
+    removeComment: (commentID) => dispatch(deleteComment(commentID)),
+    updateComment: (comment) => dispatch(updateComment(comment)),
     getCategories: () => dispatch(fetchCategories()),
     savePost: (post) => dispatch(addPost(post)),
     updatePost: (post) => dispatch(updatePost(post)),

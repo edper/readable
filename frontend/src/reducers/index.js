@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+// Get constants for reducer to use
 import {
   GET_CATEGORIES,
   GET_ALL_POSTS,
@@ -9,9 +10,15 @@ import {
   UPDATE_POST,
   VOTE_UP,
   VOTE_DOWN,
-  GET_POST_COMMENTS
+  VOTE_UP_COMMENTS,
+  VOTE_DOWN_COMMENTS,
+  ADD_COMMENT,
+  REMOVE_COMMENT_FROM_POST,
+  GET_POST_COMMENTS,
+  UPDATE_COMMENT
 } from '../actions' 
 
+// Reducer regarding Post
 function posts (state = {}, action) {
     switch (action.type) {
       case GET_ALL_POSTS:
@@ -44,15 +51,38 @@ function posts (state = {}, action) {
     }
 }
 
+// Reducer regarding comments of a Post
 function comments (state = {}, action) {
     switch (action.type) {
       case GET_POST_COMMENTS:
           return action.comments;
+      case ADD_COMMENT:
+          return [...state, action.comment];
+      case VOTE_UP_COMMENTS:
+          return [
+            ...state.map((comment)=> comment.id===action.commentsID ? (( comment.voteScore!==0 ? comment.voteScore++ : (comment.voteScore=1)) && comment) : comment )
+          ];
+      case VOTE_DOWN_COMMENTS:
+        return [
+          ...state.map((comment)=> comment.id===action.commentsID ? (( comment.voteScore!==0 ? comment.voteScore-- : (comment.voteScore=-1)) && comment) : comment )
+        ];
+      case REMOVE_COMMENT_FROM_POST:
+        return [
+                  ...state.filter((comment)=>comment.id!==action.commentID)                  
+              ];
+      case UPDATE_COMMENT:
+        return [ ...state.map(comment=>{
+                  if (comment.id!==action.comment.id) {
+                    return comment;}
+                  return {
+                  ...comment, timestamp: action.comment.timestamp, body: action.comment.body};
+              }) ];      
       default :
           return state
     }
 }
 
+// Reducer regarding Categories
 function categories (state = {}, action) {
   switch (action.type) {
     case GET_CATEGORIES:

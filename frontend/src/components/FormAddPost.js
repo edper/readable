@@ -2,17 +2,22 @@ import React, {Component} from 'react';
 
 class FormAddPost extends Component {
 
+    // state for added Post detail
+    state = {
+        id:'',
+        title:'',
+        body:'',
+        author:'',
+        category:'react',
+        timestamp:null,
+    }
+
+    // for clearing state and input fields after post is added
     clearState=()=>{
         this.setState({ id: '', title: '', body: '', author:'', category: 'react', timestamp: null });        
     }
-        
-    constructor(props) {
-        super(props);
-        this.state = { id: '', title: '', body: '', author:'', category: 'react', timestamp: null };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-    
+
+    // Event handler for input field changes when adding details of the post
     handleInputChange = (e) => {
         const target = e.target;
         const value = target.value;
@@ -22,15 +27,40 @@ class FormAddPost extends Component {
         });
     }
 
+    // Event handler when user saves the post
     handleSubmit = (e) => {
+        e.preventDefault();
         const post = this.state;
         post.id = window.getUUID();
         post.timestamp = Date.now();
         post.category = this.category.value;
         this.props.savePost(post);
         this.clearState();
-        e.preventDefault();
     }
+
+    // Loading all Script needed
+    componentWillMount() {
+
+        // Mount JQuery script
+        const scriptJQ = document.createElement("script");
+        scriptJQ.src = "https://code.jquery.com/jquery-3.2.1.min.js";
+        scriptJQ.async = true;
+        document.body.appendChild(scriptJQ);
+
+        // Mount Materialize script
+        const scriptMaterialize = document.createElement("script");
+        scriptMaterialize.src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js";
+        scriptMaterialize.async = true;
+        document.body.appendChild(scriptMaterialize);    
+        
+        // Mount Readable script
+        const scriptReadable = document.createElement("script");
+        scriptReadable.src = "../js/readable.js";
+        scriptReadable.async = true;
+        document.body.appendChild(scriptReadable);
+
+    }
+
 
     render() {
         return (

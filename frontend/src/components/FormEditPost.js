@@ -2,17 +2,13 @@ import React, {Component} from 'react';
 
 class FormEditPost extends Component {
 
+    // state detail needed when editing a Post
     state = {
         editTitle:'',
         editBody:''
     };
         
-    constructor(props) {
-        super(props);
-        this.handleSubmitEdit = this.handleSubmitEdit.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
+    // Event handler when user make changes on a post
     handleInputChange = (e) => {
         const target = e.target;
         const value = target.value;
@@ -22,6 +18,7 @@ class FormEditPost extends Component {
         });
     }
 
+    // Event handler when user save his/her changes of the post
     handleSubmitEdit = (e) => {
         e.preventDefault();
         const post = this.props.post;
@@ -39,6 +36,16 @@ class FormEditPost extends Component {
     // Reset state so that state will refresh everytime this component is called
     resetState() {
         this.setState(()=>({editTitle:'', editBody:''}));
+    }
+
+    // set edit flag so that buttons (i.e. sorting and adding) will not show up
+    componentWillMount() {
+        this.props.setEditFlag(true);
+    }
+
+    // set edit flag to false after editing a Post
+    componentWillUnmount() {
+        this.props.setEditFlag(false);
     }
 
     render() {

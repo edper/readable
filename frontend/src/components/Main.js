@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import ReadableList from './ReadableList';
-//import FormAddPost from './FormAddPost';
-//import FormEditPost from './FormEditPost';
 import FormViewPostComments from './FormViewPostComments';
-import PropTypes from 'prop-types'
-
+import PropTypes from 'prop-types';
 
 class Main extends Component {
         
@@ -19,25 +16,30 @@ class Main extends Component {
         removePost: PropTypes.func.isRequired,
         votedPost: PropTypes.func.isRequired,
         updatePost: PropTypes.func.isRequired,
-        getPost: PropTypes.func.isRequired,
+        fetchPost: PropTypes.func.isRequired,
+        getAllComments: PropTypes.func.isRequired,
+        votedComments: PropTypes.func.isRequired,
+        saveComment: PropTypes.func.isRequired, 
+        removeComment: PropTypes.func.isRequired, 
+        updateComment: PropTypes.func.isRequired,
     };
 
-    getViewPost = (viewPostID) => {
-        //console.log("View "+this.props.getPost(viewPostID).title);
-        console.log("Post ID", viewPostID);
-        const onePost = this.props.getPost(viewPostID);
-        this.setState({viewPost:onePost});
-    }
-
+    // Edit flag toggler so that buttons will not show up when editing 
+    // or will show up when not editing
     setEdit = (flag) => {
-        this.setState({isEditing:flag});
+        this.setState(()=>({isEditing:flag}));
     }
 
+    componentDidMount() {
+        this.setState(()=>({isEditing:false}));        
+    }
     
     render() {
 
-        const { posts, savePost, removePost, votedPost, updatePost } = this.props;
+        const { posts, savePost, removePost, votedPost, updatePost, fetchPost, 
+                getAllComments, votedComments, comments, saveComment, removeComment, updateComment } = this.props;
         
+
         return(
             <div className="App-col-all">
                 <div className="col s9">
@@ -46,25 +48,22 @@ class Main extends Component {
                             <a href="" className="brand-logo center">Readable</a>
                         </div>
                     </nav>
-                    {!this.state.isEditing  && (
-                        <div className="float-button row">
-                            <strong className="sortByFont">Sort by:</strong> <a className='dropdown-button btn deep-purple' href='' data-activates='sortBy'>Popularity</a>
-                            <ul id='sortBy' className='dropdown-content'>
-                                <li>Popularity</li>
-                                <li>Date</li>
-                            </ul>
-                        </div>
-                    )}
                     <div className="row">
-                        <Route key="root" exact path="/" render={()=>(
-                            <ReadableList posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost} getViewPost={this.getViewPost} editFlag={this.state.isEditing}/>                        
-                        )}/>
-                        <Route key="withCategory" path='/:categoryId' render={({match})=>(
-                            <ReadableList categoryId={match.params.categoryId} posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost}  getViewPost={this.getViewPost} editFlag={this.state.isEditing}/>
-                        )}/>
-                        <Route key="messages" path='/messages/:postID' render={({match})=>(
-                            <FormViewPostComments viewPost={this.state.viewPost} setEditFlag={this.setEdit}/>
-                        )}/>
+                        <Switch>
+                            <Route key="root" exact path="/" render={()=>(
+                                <ReadableList posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost}  
+                                    editFlag={this.state.isEditing} setEditFlag={this.setEdit} getAllComments={getAllComments}/>                        
+                            )}/>
+                            <Route key="viewComments" path='/comments/:postID' render={({match})=>(
+                                <FormViewPostComments postID={match.params.postID} fetchPost={fetchPost} posts={posts} 
+                                    getAllComments={getAllComments} votedComments = {votedComments} comments={comments} setEditFlag={this.setEdit} 
+                                    saveComment={saveComment} removeComment={removeComment} updateComment={updateComment}/>
+                            )}/>
+                            <Route key="withCategory" path='/:categoryId' render={({match})=>(
+                                <ReadableList categoryId={match.params.categoryId} posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost} 
+                                    editFlag={this.state.isEditing} setEditFlag={this.setEdit} getAllComments={getAllComments}/>
+                            )}/>
+                        </Switch>
                     </div>
                 </div>
             </div>

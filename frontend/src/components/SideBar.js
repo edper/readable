@@ -6,23 +6,27 @@ import capitalize from '../util/Helper';
 class SideBar extends Component {
 
     render() {
+
         const active_hilight = {
             color: 'yellow',
         }
-      
+        // categories props
         const categories = this.props.categories;
+        
         return(
             <div className="col s3 z-depth-1 App-col-all indigo darken-1">
                 <img className="responsive-img z-depth-1" src={logo} alt="readable logo"/>
                 <div className="row">
                     <h5 className="center categories">Categories</h5>
                         <ul>
+                            {/* Add the All link for all categories */}
                             {
                                 <NavLink key="all" className="menubar-color" exact to="/" activeStyle={active_hilight}> 
                                     <li key="all" className="menubar waves-effect waves-light">All</li>
                                 </NavLink>
                             
                             }
+                            {/* Use categories as Menu links on the sidebar */}
                             { 
                                 categories.length > 0 && 
                                 categories.map((category)=> (                                
