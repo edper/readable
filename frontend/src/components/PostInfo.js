@@ -2,17 +2,20 @@ import React, {Component} from 'react';
 
 class PostInfo extends Component {
 
+    // Event handler for deleting a post
     handleDeletePost = (e) => {
         e.preventDefault();
         this.props.setEditFlag(false);
         this.props.removePost(this.postid.value);
     }
 
+    // Event handler for voting a post
     handleVotePost = (e) => {
         e.preventDefault();
         this.props.votedPost(e.target.id, this.postid.value);
     }
 
+    // Event handler for editing a post
     handlePassPost = (e) => {
         e.preventDefault();
         this.props.passPost(this.props.post);
@@ -36,7 +39,7 @@ class PostInfo extends Component {
 
         const post = this.props.post;
         const postDate = new Date(post.timestamp).toDateString();
-        const url = `/comments/${post.id}`;
+        const url = `/${post.category}/${post.id}`;
 
         return (
             <div className="row">

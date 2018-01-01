@@ -29,7 +29,7 @@ class App extends Component {
                 {/* Sidebar Menu Component */}
                 <SideBar categories={this.props.categories}/>
                 {/* Main content Component on the right of Sidebar menu */}
-                <Main posts={this.props.posts} savePost={savePost} removePost={removePost} 
+                <Main posts={this.props.posts} savePost={savePost} removePost={removePost} categories={this.props.categories} 
                     votedPost={votedPost} updatePost={updatePost} fetchPost={fetchPost} 
                     getAllComments={getAllComments} votedComments = {votedComments} comments={comments} 
                     saveComment={saveComment} removeComment={removeComment} updateComment={updateComment}/>

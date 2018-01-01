@@ -51,7 +51,6 @@ class FormEditPost extends Component {
     render() {
 
         const post = this.props.post;
-        
         return (
             <div>
                 <div id="edit-post" className="modal modal-fixed-footer">   

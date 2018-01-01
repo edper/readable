@@ -26,10 +26,6 @@ class ReadableList extends Component {
         this.setState({postdata:forEditPost});
     }
 
-    //getViewPost = (id) => {
-    //    this.props.getViewPost(id);
-    //}
-
     // Get all comments for each post
     getAllComments = (id) => {
         this.props.getAllComments(id);        
@@ -62,15 +58,6 @@ class ReadableList extends Component {
                         </div>
                  )}
 
-                 {/*!editFlag && (
-                    <div className="row input-field col s2 right">
-                        <strong className="sortByFont">Sort by:</strong> 
-                        <select onChange={this.handleSortChange()} id="sortBy">
-                            <option value="voteScore" selected>Popularity</option>
-                            <option value="timestamp">Date</option>
-                        </select>
-                    </div>
-                 )*/}
                 <div className="row readable-list">
                     {
                         typeof categoryId === 'undefined' ?

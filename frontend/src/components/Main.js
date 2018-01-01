@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import ReadableList from './ReadableList';
 import FormViewPostComments from './FormViewPostComments';
+import NotFound from './NotFound';
 import PropTypes from 'prop-types';
+import {findElement} from '../util/Helper';
 
 class Main extends Component {
         
@@ -36,12 +38,13 @@ class Main extends Component {
     
     render() {
 
-        const { posts, savePost, removePost, votedPost, updatePost, fetchPost, 
+        const { posts, savePost, removePost, votedPost, updatePost, fetchPost, categories,
                 getAllComments, votedComments, comments, saveComment, removeComment, updateComment } = this.props;
         
 
         return(
             <div className="App-col-all">
+                {/*posts.length>0 && findElement(posts,"id","zdjgi8op3hjbw381bp")*/}
                 <div className="col s9">
                     <nav className="remover">
                         <div className="nav-wrapper indigo darken-4">
@@ -54,14 +57,25 @@ class Main extends Component {
                                 <ReadableList posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost}  
                                     editFlag={this.state.isEditing} setEditFlag={this.setEdit} getAllComments={getAllComments}/>                        
                             )}/>
-                            <Route key="viewComments" path='/comments/:postID' render={({match})=>(
-                                <FormViewPostComments postID={match.params.postID} fetchPost={fetchPost} posts={posts} 
+                            <Route key="NoMatch" path="/404" render={({history})=>(<NotFound history={history}/>)}/>
+                            <Route key="viewComments" path='/:category/:post_id' render={({match})=>(
+                                posts.length>0 && (findElement(posts,"id",match.params.post_id)
+                                ? <FormViewPostComments post_id={match.params.post_id} fetchPost={fetchPost} posts={posts} 
                                     getAllComments={getAllComments} votedComments = {votedComments} comments={comments} setEditFlag={this.setEdit} 
-                                    saveComment={saveComment} removeComment={removeComment} updateComment={updateComment}/>
-                            )}/>
+                                    saveComment={saveComment} removeComment={removeComment} updateComment={updateComment} updatePost={updatePost} votedPost={votedPost} removePost={removePost} />
+                                : <Redirect to={{
+                                    pathname: '/404',
+                                    state: { referrer: "Post" }
+                                  }}/>)
+                                )}/>
                             <Route key="withCategory" path='/:categoryId' render={({match})=>(
-                                <ReadableList categoryId={match.params.categoryId} posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost} 
+                                categories.length > 0 && findElement(categories,"name",match.params.categoryId)
+                                ? <ReadableList categoryId={match.params.categoryId} posts={posts} removePost={removePost} votedPost={votedPost} savePost={savePost} updatePost={updatePost} 
                                     editFlag={this.state.isEditing} setEditFlag={this.setEdit} getAllComments={getAllComments}/>
+                                : <Redirect to={{
+                                    pathname: '/404',
+                                    state: { referrer: "Category" }
+                                  }}/>
                             )}/>
                         </Switch>
                     </div>

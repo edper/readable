@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import logo from '../readable-logo.png';
 import { NavLink } from 'react-router-dom';
-import capitalize from '../util/Helper';
+import {capitalize} from '../util/Helper';
 
 class SideBar extends Component {
 

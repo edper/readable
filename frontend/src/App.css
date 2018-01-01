@@ -164,7 +164,7 @@
   border-top: 2px solid lightgray;
 }
 
-.button-add {
+.button-add, .button-edit {
   width: 70px;
   height: 30px;
   padding:8px;
@@ -172,4 +172,47 @@
   background-color: lightgray;
   padding-bottom: 10px;
   padding-top:10px;
+}
+
+.button-edit:hover {
+  background-color:lightblue;
+}
+
+.notfound {
+  background-color: rgb(0, 183, 255);
+  width: 100%;
+  -webkit-animation-name: nourl;
+  /* Chrome, Safari, Opera */
+  -webkit-animation-duration: 2s;
+  /* Chrome, Safari, Opera */
+  animation-name: nourl;
+  animation-duration: 2s;
+}
+
+@-webkit-keyframes nourl {
+  0% {
+    opacity: 100;
+    filter: alpha(opacity=1000);
+    /* For IE8 and earlier */
+  }
+  100% {
+    opacity: 0.0;
+    filter: alpha(opacity=0);
+    /* For IE8 and earlier */
+  }
+}
+
+
+/* Standard syntax */
+@keyframes nourl {
+  0% {
+    opacity: 100;
+    filter: alpha(opacity=1000);
+    /* For IE8 and earlier */
+  }
+  100% {
+    opacity: 0.0;
+    filter: alpha(opacity=0);
+    /* For IE8 and earlier */
+  }
 }
